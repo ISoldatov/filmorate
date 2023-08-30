@@ -33,7 +33,7 @@ public class FilmController {
     public Film create(@RequestBody Film film) {
         log.debug("Добавлен фильм \"{}\"", film.getName());
         checkFilm(film);
-        return films.putIfAbsent(film.getId(), film);
+        return films.computeIfAbsent(film.getId(), v -> film);
     }
 
     @PutMapping("/film")

@@ -2,9 +2,11 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.UserValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,16 +24,25 @@ public class UserController {
         return new ArrayList<>(users.values());
     }
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public User create(@RequestBody User user) {
         log.debug("Добавлен пользователь \"{}\"", user.getName());
-        return users.putIfAbsent(user.getId(), user);
+        checkUser(user);
+        return users.computeIfAbsent(user.getId(), v -> user);
     }
 
-    @PutMapping("/user")
+    @PutMapping("/users")
     public User update(@RequestBody User user) {
         int idUser = user.getId();
         log.debug("Обновлен пользователь с id={}", idUser);
+        checkUser(user);
         return users.computeIfPresent(idUser, (i, u) -> user);
+    }
+
+    private void checkUser(User user) {
+        if (user.getEmail().isBlank() || !user.getEmail().contains("@") ||
+                user.getLogin().isBlank() || user.getBirthday().isAfter(LocalDate.now())) {
+            throw new UserValidationException(user.getId());
+        }
     }
 }
