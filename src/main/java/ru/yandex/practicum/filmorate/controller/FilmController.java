@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @RestController
@@ -21,6 +22,7 @@ public class FilmController {
     public static final int MIN_DURATION = 0;
 
     private final Map<Integer, Film> films = new HashMap<>();
+    private final AtomicInteger counter = new AtomicInteger(0);
 
 
     @GetMapping("/films")
@@ -29,26 +31,33 @@ public class FilmController {
         return new ArrayList<>(films.values());
     }
 
-    @PostMapping("/film")
+    @PostMapping("/films")
     public Film create(@RequestBody Film film) {
         log.debug("Добавлен фильм \"{}\"", film.getName());
         checkFilm(film);
+        if (film.getId() == null) {
+            film.setId(counter.incrementAndGet());
+        }
+
         return films.computeIfAbsent(film.getId(), v -> film);
     }
 
-    @PutMapping("/film")
+    @PutMapping("/films")
     public Film update(@RequestBody Film film) {
-        log.debug("Обновлен фильм с id={}", film.getId());
+        int idFilm = film.getId();
+        log.debug("Обновлен фильм с id={}", idFilm);
         checkFilm(film);
-        return films.computeIfPresent(film.getId(), (i, f) -> film);
+        if (!films.containsKey(idFilm)) {
+            throw new FilmValidationException();
+        }
+        return films.computeIfPresent(idFilm, (i, f) -> film);
     }
 
     private void checkFilm(Film film) {
-        int idFilm = film.getId();
         if (film.getName().isBlank() || film.getDuration() < MIN_DURATION ||
                 film.getDescription().length() > MAX_DESCRIPTION_LENGTH ||
                 film.getReleaseDate().isBefore(EARLY_RELEASE_DATE)) {
-            throw new FilmValidationException(idFilm);
+            throw new FilmValidationException();
         }
     }
 
