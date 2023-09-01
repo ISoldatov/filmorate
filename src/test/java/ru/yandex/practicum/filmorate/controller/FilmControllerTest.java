@@ -71,14 +71,12 @@ class FilmControllerTest {
         Assertions.assertDoesNotThrow( () -> filmController.create(filmDesc),
                 "Описание фильма равно " + FilmController.MAX_DESCRIPTION_LENGTH + " символов - исключения не должно быть");
     }
-
-
     @Test
     void updateNormal() {
-//        Film film = new Film( "Фильм", "Описание", LocalDate.of(2022, 1, 1), 60);
-//        filmController.create(film);
-//        Film filmUp = new Film( "ФильмОбн", "ОписаниеОбн", LocalDate.of(2022, 2, 2), 30);
-//        Film testFilm = filmController.update(filmUp);
-//        Assertions.assertEquals(filmUp, testFilm, "Сохраненный и обновленный фильм не совпадают");
+        Film film = new Film( "Фильм", "Описание", LocalDate.of(2022, 1, 1), 60);
+        filmController.create(film);
+        Film filmUp = new Film( 1,"ФильмОбн", "ОписаниеОбн", LocalDate.of(2022, 2, 2), 30);
+        Film testFilm = filmController.update(filmUp);
+        Assertions.assertEquals(filmUp, testFilm, "Сохраненный и обновленный фильм не совпадают");
     }
 }

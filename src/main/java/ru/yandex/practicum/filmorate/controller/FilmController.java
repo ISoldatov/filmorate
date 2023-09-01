@@ -20,7 +20,6 @@ public class FilmController {
     public static final int MAX_DESCRIPTION_LENGTH = 200;
     public static final LocalDate EARLY_RELEASE_DATE = LocalDate.of(1895, 12, 28);
     public static final int MIN_DURATION = 0;
-
     private final Map<Integer, Film> films = new HashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
