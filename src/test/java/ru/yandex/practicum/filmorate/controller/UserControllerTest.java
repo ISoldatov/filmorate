@@ -27,10 +27,10 @@ class UserControllerTest {
 
     @Test
     void createNormal() {
-        User testUser_1 = userController.create(userNotIdNotName_1);
-        assertEquals(userNotIdNotName_1, testUser_1);
-        User testUser_2 = userController.create(userNotIdHasName_2);
-        assertEquals(userNotIdHasName_2, testUser_2);
+        User testUser1 = userController.create(userNotIdNotName_1);
+        assertEquals(userNotIdNotName_1, testUser1);
+        User testUser2 = userController.create(userNotIdHasName_2);
+        assertEquals(userNotIdHasName_2, testUser2);
     }
 
     @Test
@@ -43,7 +43,7 @@ class UserControllerTest {
     @Test
     void update() {
         userController.create(userNotIdNotName_1);
-        User testUser_1 = userController.update(userHasId_1_NotName);
-        assertEquals(userHasId_1_NotName, testUser_1);
+        User testUser1 = userController.update(userHasId_1_NotName);
+        assertEquals(userHasId_1_NotName, testUser1);
     }
 }
