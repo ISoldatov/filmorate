@@ -1,11 +1,12 @@
 package ru.yandex.practicum.filmorate;
 
+import lombok.Value;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
+@Value
 public class UserTestData {
-
     public static final User userNotIdNotName_1 = new User("email_user1@ya.ru", "login_user1", LocalDate.of(1985, 1, 1));
     public static final User userNotIdHasName_2 = new User("email_user2@ya.ru", "login_user2", "name_user2 ", LocalDate.of(1985, 2, 2));
 
