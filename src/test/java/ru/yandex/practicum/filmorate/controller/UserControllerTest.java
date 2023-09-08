@@ -19,18 +19,22 @@ class UserControllerTest {
 
     @Test
     void getAll() {
-        User[] usersExpected = new User[]{userNotIdNotName_1, userNotIdHasName_2};
-        userController.create(userNotIdNotName_1);
-        userController.create(userNotIdHasName_2);
+        User[] usersExpected = new User[]{userNotId, userNotId_2};
+        userController.create(userNotId);
+        userController.create(userNotId_2);
         assertArrayEquals(usersExpected, userController.getAll().toArray());
     }
 
     @Test
-    void createNormal() {
-        User testUser1 = userController.create(userNotIdNotName_1);
-        assertEquals(userNotIdNotName_1, testUser1);
-        User testUser2 = userController.create(userNotIdHasName_2);
-        assertEquals(userNotIdHasName_2, testUser2);
+    void createNotId() {
+        User testUser2 = userController.create(userNotId);
+        assertEquals(userNotId, testUser2);
+    }
+
+    @Test
+    void createNotIdNotName() {
+        User testUser1 = userController.create(userNotIdNotName);
+        assertEquals(userNotIdNotName, testUser1);
     }
 
     @Test
@@ -42,8 +46,8 @@ class UserControllerTest {
 
     @Test
     void update() {
-        userController.create(userNotIdNotName_1);
-        User testUser1 = userController.update(userHasId_1_NotName);
-        assertEquals(userHasId_1_NotName, testUser1);
+        userController.create(userNotIdNotName);
+        User testUser1 = userController.update(userNotName);
+        assertEquals(userNotName, testUser1);
     }
 }
