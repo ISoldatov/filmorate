@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
@@ -11,9 +15,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Film {
     private Integer id;
+
+    @NotBlank(message = "Название фильма не может быть пустым.")
     private String name;
+    @Size(max = 200, message = "Максимальное описание составляет 200 символов.")
     private String description;
+
+    @Past(message = "Дата выхода должна быть в прошлом.")
     private LocalDate releaseDate;
+
+    @Min(value = 1, message = "Продолжительность фильма должна быть больше 0.")
     private int duration;
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
