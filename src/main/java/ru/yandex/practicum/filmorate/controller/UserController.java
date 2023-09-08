@@ -41,13 +41,12 @@ public class UserController {
 
     @PutMapping("/users")
     public User update(@Valid @RequestBody User user) {
-        int idUser = user.getId();
-        log.debug("Обновлен пользователь с id={}", idUser);
+        log.debug("Обновлен пользователь \"{}\"", user.getName());
         checkUser(user);
-        if (!users.containsKey(idUser)) {
+        if (!users.containsKey(user.getId())) {
             throw new UserValidationException();
         }
-        return users.computeIfPresent(idUser, (i, u) -> user);
+        return users.computeIfPresent(user.getId(), (i, u) -> user);
     }
 
     private void checkUser(User user) {

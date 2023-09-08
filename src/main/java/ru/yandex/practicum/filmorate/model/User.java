@@ -1,21 +1,20 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
-@Data
+
+@EqualsAndHashCode(callSuper = false)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-
-    private Integer id;
-
-    @Email(message = "Email не правильного формата.")
+@Getter
+@Setter
+public class User extends AbstractBaseEntity {
+    @Email(message = "Email не верного формата.")
     private String email;
 
     @NotBlank(message = "Login не может быть пустым.")
@@ -29,20 +28,26 @@ public class User {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
+    public User(Integer id, String email, String login, LocalDate birthday) {
+        this(id,email, birthday);
+        this.login = login;
+    }
+
+    public User(Integer id, String email, String login, String name, LocalDate birthday) {
+        this(id,email, login,birthday);
+        this.name=name;
+    }
+
+    public User(Integer id, String email, LocalDate birthday) {
+        super(id);
+        this.email = email;
+        this.birthday = birthday;
+    }
+
     public User(String email, String login, LocalDate birthday) {
         this.email = email;
         this.login = login;
         this.birthday = birthday;
-    }
-
-    public User(Integer id, String email, String login, LocalDate birthday) {
-        this(email, login, birthday);
-        this.id = id;
-    }
-
-    public User(String email, String login, String name, LocalDate birthday) {
-        this(email, login, birthday);
-        this.name = name;
     }
 
 }
