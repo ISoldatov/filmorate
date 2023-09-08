@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -44,15 +45,20 @@ public class UserController {
         log.debug("Обновлен пользователь \"{}\"", user.getName());
         checkUser(user);
         if (!users.containsKey(user.getId())) {
-            throw new UserValidationException();
+            throw new NotFoundException(String.format("Пользователь с id=%d не найден", user.getId()));
         }
         return users.computeIfPresent(user.getId(), (i, u) -> user);
     }
 
     private void checkUser(User user) {
-        if (user.getEmail().isBlank() || !user.getEmail().contains("@") ||
-                user.getLogin().isBlank() || user.getBirthday().isAfter(LocalDate.now())) {
-            throw new UserValidationException();
+        if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+            throw new UserValidationException("Электронная почта не может быть пустой и должна содержать символ @.");
+        }
+        if (user.getLogin().isBlank()) {
+            throw new UserValidationException("Логин не может быть пустым и содержать пробелы.");
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            throw new UserValidationException("Дата рождения не может быть в будущем.");
         }
     }
 }

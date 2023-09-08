@@ -61,7 +61,7 @@ class FilmControllerTest {
         Assertions.assertThrows(FilmValidationException.class, () -> filmController.create(filmName),
                 "Д/б FilmValidationException т.к. наименование фильмы - пустая строка");
 
-        Film filmDur = new Film("Фильм", "Описание", LocalDate.of(2022, 1, 1), 0);
+        Film filmDur = new Film("Фильм", "Описание", LocalDate.of(2022, 1, 1), 1);
         Assertions.assertDoesNotThrow(() -> filmController.create(filmDur),
                 "Продолжительность фильма равна " + FilmController.MIN_DURATION + " - исключения не должно быть");
 
