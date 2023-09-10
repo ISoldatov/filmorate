@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -15,8 +16,9 @@ import static ru.yandex.practicum.filmorate.exception.ValidationUtil.*;
 @RestController
 public class FilmController {
 
-    private FilmService service;
+    private final FilmService service;
 
+    @Autowired
     public FilmController(FilmService service) {
         this.service = service;
     }
@@ -35,10 +37,8 @@ public class FilmController {
         checkNotNew(film);
         checkFilm(film);
         return service.update(film);
-//        if (!films.containsKey(idFilm)) {
-//            throw new NotFoundException(String.format("Фильм с id=%d не найден.", film.getId()));
-//        }
     }
+
 
     public Film get(int id) {
         log.debug("Получение фильм с id={}", id);

@@ -1,13 +1,16 @@
 package ru.yandex.practicum.filmorate.service;
 
+import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.ValidationUtil;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.List;
 
+@Service
 public class FilmService {
 
-    private FilmStorage storage;
+    private final FilmStorage storage;
 
     public FilmService(FilmStorage storage) {
         this.storage = storage;
@@ -17,13 +20,11 @@ public class FilmService {
         return storage.save(film);
     }
 
-    public Film update(Film film) {
-        return storage.save(film);
-    }
+    public Film update(Film film) { return ValidationUtil.checkNotFoundWithId(storage.save(film),film.getId()); }
 
-    public Film get(int id) {
-        return storage.get(id);
-    }
+    public void delete(int id) { ValidationUtil.checkNotFoundWithId(storage.delete(id), id); }
+
+    public Film get(int id) { return ValidationUtil.checkNotFoundWithId(storage.get(id), id); }
 
     public List<Film> getAll() {
         return storage.getAll();
