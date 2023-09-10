@@ -64,5 +64,29 @@ public class UserController {
         return service.getAll();
     }
 
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable int id, @PathVariable int friendId) {
+        log.debug("Добавление в друзья пользователя id={} друга с friendId={}", id, friendId);
+        service.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public void removeFriend(@PathVariable int id, @PathVariable int friendId) {
+        log.debug("Удаление из друзей пользователя id={} друга с friendId={}", id, friendId);
+        service.removeFriend(id, friendId);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public List<User> getFriends(@PathVariable int id) {
+        log.debug("Получение списка друзей пользователя id={}", id);
+        return service.getFriends(id);
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> getCommFriends(@PathVariable int id, @PathVariable int otherId) {
+        log.debug("Получение списка общих друзей пользователя id={} с пользователем otherId={}", id, otherId);
+        return service.getCommFriends(id, otherId);
+    }
+
 
 }

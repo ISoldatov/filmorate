@@ -6,7 +6,9 @@ import ru.yandex.practicum.filmorate.exception.ValidationUtil;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserService {
@@ -38,4 +40,27 @@ public class UserService {
         return storage.getAll();
     }
 
+    public void addFriend(int id, int friendId) {
+        storage.get(id).getFriends().add(friendId);
+    }
+
+    public void removeFriend(int id, int friendId) {
+        storage.get(id).getFriends().remove(friendId);
+    }
+
+    public List<User> getFriends(int id) {
+        return storage.get(id).getFriends().stream()
+                .map(storage::get)
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getCommFriends(int id, int otherId) {
+        List<Integer> list = Stream.of(storage.get(id).getFriends(), storage.get(otherId).getFriends())
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        return list.stream()
+                .filter((i -> Collections.frequency(list, i) > 1))
+                .map(storage::get)
+                .collect(Collectors.toList());
+    }
 }

@@ -5,6 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @EqualsAndHashCode(callSuper = false)
@@ -28,14 +30,16 @@ public class User extends AbstractBaseEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
+    private Set<Integer> friends = new HashSet<>();
+
     public User(Integer id, String email, String login, LocalDate birthday) {
-        this(id,email, birthday);
+        this(id, email, birthday);
         this.login = login;
     }
 
     public User(Integer id, String email, String login, String name, LocalDate birthday) {
-        this(id,email, login,birthday);
-        this.name=name;
+        this(id, email, login, birthday);
+        this.name = name;
     }
 
     public User(Integer id, String email, LocalDate birthday) {

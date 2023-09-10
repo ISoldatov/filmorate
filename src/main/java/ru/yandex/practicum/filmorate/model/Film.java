@@ -10,6 +10,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Data
@@ -27,6 +29,8 @@ public class Film extends AbstractBaseEntity {
 
     @Min(value = 1, message = "Продолжительность фильма должна быть больше 0.")
     private int duration;
+
+    private Set<Integer> likes = new HashSet<>();
 
     public Film(Integer id, String name, String description, LocalDate releaseDate, int duration) {
         super(id);
