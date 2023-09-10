@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.yandex.practicum.filmorate.exception.ValidationUtil.*;
@@ -39,7 +38,13 @@ public class FilmController {
         return service.update(film);
     }
 
+    @DeleteMapping("/films/{id}")
+    public void delete(int id) {
+        log.debug("Удаление фильма с id={}", id);
+        service.delete(id);
+    }
 
+    @GetMapping("/films/{id}")
     public Film get(int id) {
         log.debug("Получение фильм с id={}", id);
         return service.get(id);
@@ -48,7 +53,7 @@ public class FilmController {
     @GetMapping("/films")
     public List<Film> getAll() {
         log.debug("Запрос списка всех фильмов");
-        return new ArrayList<>();
+        return service.getAll();
     }
 
 }

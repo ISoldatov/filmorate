@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.exception;
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.filmorate.model.AbstractBaseEntity;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
@@ -25,6 +26,18 @@ public class ValidationUtil {
         }
         if (film.getReleaseDate().isBefore(EARLY_RELEASE_DATE)) {
             throw new FilmValidationException("дата релиза — не раньше 28 декабря 1895 года");
+        }
+    }
+
+    public void checkUser(User user) {
+        if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+            throw new UserValidationException("Электронная почта не может быть пустой и должна содержать символ @.");
+        }
+        if (user.getLogin().isBlank()) {
+            throw new UserValidationException("Логин не может быть пустым и содержать пробелы.");
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            throw new UserValidationException("Дата рождения не может быть в будущем.");
         }
     }
 
