@@ -39,6 +39,9 @@ public class ValidationUtil {
         if (user.getBirthday().isAfter(LocalDate.now())) {
             throw new UserValidationException("Дата рождения не может быть в будущем.");
         }
+        if (user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 
     public static void checkNew(AbstractBaseEntity entity) {
