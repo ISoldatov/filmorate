@@ -48,11 +48,10 @@ public class ValidationUtil {
     }
 
     public static void checkNotNew(AbstractBaseEntity entity) {
-        if (!entity.isNew()) {
+        if (entity.isNew()) {
             throw new IllegalArgumentException(entity + " должно быть не новое (id=not null)");
         }
     }
-
 
     public static <T> T checkNotFoundWithId(T object, int id) {
         checkNotFoundWithId(object != null, id);

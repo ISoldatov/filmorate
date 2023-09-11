@@ -55,11 +55,11 @@ public class UserService {
     }
 
     public List<User> getCommFriends(int id, int otherId) {
-        List<Integer> list = Stream.of(storage.get(id).getFriends(), storage.get(otherId).getFriends())
+        List<Integer> allFriendsBothUsers = Stream.of(storage.get(id).getFriends(), storage.get(otherId).getFriends())
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-        return list.stream()
-                .filter((i -> Collections.frequency(list, i) > 1))
+        return allFriendsBothUsers.stream()
+                .filter((i -> Collections.frequency(allFriendsBothUsers, i) > 1))
                 .map(storage::get)
                 .collect(Collectors.toList());
     }
