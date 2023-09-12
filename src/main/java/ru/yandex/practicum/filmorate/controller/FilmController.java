@@ -70,11 +70,12 @@ public class FilmController {
         service.deleteLike(id, userId);
     }
 
-    @GetMapping("/films/popular?count={count}")
-    public List<Film> popularFilms(@PathVariable(value = "10", required = false) int count) {
+    @GetMapping(value = {"/films/popular", "/films/popular?count={count}"})
+    public List<Film> popularFilms(@PathVariable(required = false) String count) {
+        int number = count == null ? 10 : Integer.parseInt(count);
         return service.getAll().stream()
                 .sorted(Comparator.comparing(Film::getCountLikes).reversed())
-                .limit(count)
+                .limit(number)
                 .collect(Collectors.toList());
     }
 
