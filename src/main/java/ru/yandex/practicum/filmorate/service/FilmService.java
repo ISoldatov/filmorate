@@ -37,4 +37,14 @@ public class FilmService {
     public List<Film> getAll() {
         return storage.getAll();
     }
+
+    public void setLike(int id, int userId) {
+        Film film = ValidationUtil.checkNotFoundWithId(storage.get(id), id);
+        storage.get(id).getLikes().add(userId);
+    }
+
+    public void deleteLike(int id, int userId) {
+        Film film = ValidationUtil.checkNotFoundWithId(storage.get(id), id);
+        storage.get(id).getLikes().remove(userId);
+    }
 }

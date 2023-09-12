@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -38,5 +37,8 @@ public class Film extends AbstractBaseEntity {
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+    }
+    public int getCountLikes() {
+        return likes.size();
     }
 }
