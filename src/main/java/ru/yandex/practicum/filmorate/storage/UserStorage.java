@@ -13,6 +13,7 @@ public interface UserStorage {
     User get(int id);
 
     List<User> getAll();
+
 }
 
 

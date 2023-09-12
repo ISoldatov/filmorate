@@ -41,11 +41,18 @@ public class UserService {
     }
 
     public void addFriend(int id, int friendId) {
-        storage.get(id).getFriends().add(friendId);
+        User user = ValidationUtil.checkNotFoundWithId(storage.get(id), id);
+        User friendUser = ValidationUtil.checkNotFoundWithId(storage.get(friendId), friendId);
+//        storage.get(id).getFriends().add(friendUser.getId());
+        user.getFriends().add(friendId);
+        friendUser.getFriends().add(id);
     }
 
     public void removeFriend(int id, int friendId) {
-        storage.get(id).getFriends().remove(friendId);
+        User user = ValidationUtil.checkNotFoundWithId(storage.get(id), id);
+        User friendUser = ValidationUtil.checkNotFoundWithId(storage.get(friendId), friendId);
+        user.getFriends().remove(friendId);
+        friendUser.getFriends().remove(id);
     }
 
     public List<User> getFriends(int id) {
@@ -61,6 +68,7 @@ public class UserService {
         return allFriendsBothUsers.stream()
                 .filter((i -> Collections.frequency(allFriendsBothUsers, i) > 1))
                 .map(storage::get)
+                .distinct()
                 .collect(Collectors.toList());
     }
 }
