@@ -38,6 +38,7 @@ public class Film extends AbstractBaseEntity {
         this.releaseDate = releaseDate;
         this.duration = duration;
     }
+
     public int getCountLikes() {
         return likes.size();
     }
