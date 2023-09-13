@@ -39,12 +39,14 @@ public class FilmService {
     }
 
     public void setLike(int id, int userId) {
-        Film film = ValidationUtil.checkNotFoundWithId(storage.get(id), id);
+        ValidationUtil.checkNotFoundWithId(storage.get(id), id);
+        ValidationUtil.checkNotFoundWithId(storage.get(userId), userId);
         storage.get(id).getLikes().add(userId);
     }
 
     public void deleteLike(int id, int userId) {
-        Film film = ValidationUtil.checkNotFoundWithId(storage.get(id), id);
+        ValidationUtil.checkNotFoundWithId(storage.get(id), id);
+        ValidationUtil.checkNotFoundWithId(storage.get(userId), userId);
         storage.get(id).getLikes().remove(userId);
     }
 }

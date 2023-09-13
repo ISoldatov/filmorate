@@ -58,20 +58,20 @@ public class FilmController {
         return service.getAll();
     }
 
-    @PutMapping("/films//{id}/like/{userId}")
+    @PutMapping("/films/{id}/like/{userId}")
     public void setLike(@PathVariable int id, @PathVariable int userId) {
         log.debug("Пользователь id={} ставит like фильму c id={}", id, userId);
         service.setLike(id, userId);
     }
 
-    @DeleteMapping("/films//{id}/like/{userId}")
+    @DeleteMapping("/films/{id}/like/{userId}")
     public void deleteLike(@PathVariable int id, @PathVariable int userId) {
         log.debug("Пользователь id={} удаляет like фильму c id={}", id, userId);
         service.deleteLike(id, userId);
     }
 
     @GetMapping(value = {"/films/popular", "/films/popular?count={count}"})
-    public List<Film> popularFilms(@PathVariable(required = false) String count) {
+    public List<Film> popularFilms(@RequestParam(required = false,defaultValue = "10") String count) {
         int number = count == null ? 10 : Integer.parseInt(count);
         return service.getAll().stream()
                 .sorted(Comparator.comparing(Film::getCountLikes).reversed())
