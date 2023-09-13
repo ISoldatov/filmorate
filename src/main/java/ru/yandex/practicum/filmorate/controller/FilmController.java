@@ -71,7 +71,7 @@ public class FilmController {
     }
 
     @GetMapping(value = {"/films/popular", "/films/popular?count={count}"})
-    public List<Film> popularFilms(@RequestParam(required = false,defaultValue = "10") String count) {
+    public List<Film> popularFilms(@RequestParam(defaultValue = "10") String count) {
         int number = count == null ? 10 : Integer.parseInt(count);
         return service.getAll().stream()
                 .sorted(Comparator.comparing(Film::getCountLikes).reversed())

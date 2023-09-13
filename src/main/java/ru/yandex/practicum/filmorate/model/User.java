@@ -26,7 +26,7 @@ public class User extends AbstractBaseEntity {
     private String name;
 
     @NotNull(message = "Дата рождения обязательна.")
-    @Past(message = "Дата рождения не может быть в будущем.")
+    @PastOrPresent(message = "Дата рождения не может быть в будущем.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 

@@ -13,12 +13,18 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handNotFoundEntity(final NotFoundException e) {
-        return Map.of("error", e.getMessage());
+        return Map.of("ERROR", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handIncorrectId(final IllegalArgumentException e) {
-        return Map.of("error", e.getMessage());
+        return Map.of("ERROR", e.getMessage());
+    }
+
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handAllExceptions(final Throwable e) {
+        return Map.of("ERROR", "Внутренняя ошибка сервера");
     }
 }
