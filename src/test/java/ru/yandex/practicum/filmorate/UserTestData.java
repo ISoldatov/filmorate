@@ -7,14 +7,33 @@ import java.time.LocalDate;
 
 @UtilityClass
 public class UserTestData {
-    public static final User userNotIdNotName_1 = new User("email_user1@ya.ru", "login_user1", LocalDate.of(1985, 1, 1));
-    public static final User userNotIdHasName_2 = new User("email_user2@ya.ru", "login_user2", "name_user2 ", LocalDate.of(1985, 2, 2));
 
-    public static final User userHasId_1_NotName = new User(1, "email_user_has_id_1@ya.ru", "login_user_has_id_1", LocalDate.of(1985, 1, 1));
-    public static final User userHasId_2_HasName = new User(2, "email_user_has_id_2@ya.ru", "login_user_has_id_2", "name_user2", LocalDate.of(1985, 2, 2));
+    private static final LocalDate BIRTHDAY = LocalDate.of(1985, 3, 29);
 
-    public static final User userBadEmail = new User("emailya.ru", "login_user", LocalDate.of(2000, 1, 1));
-    public static final User userBadLogin = new User("email@ya.ru", "", LocalDate.of(2000, 1, 1));
-    public static final User userBadBirthday = new User("email@ya.ru", "login", LocalDate.of(2030, 1, 1));
+    public static final User user = new User(1, "email@ya.ru", "Login", "Name", BIRTHDAY);
+    public static final User userNotName = new User(1, "email@ya.ru", "Login", BIRTHDAY);
+    public static final User userNotId = User.builder()
+            .email("email@ya.ru")
+            .login("Login")
+            .name("Name")
+            .birthday(BIRTHDAY)
+            .build();
+
+    public static final User userNotId_2 = User.builder()
+            .email("email_2@ya.ru")
+            .login("Login_2")
+            .name("Name_2")
+            .birthday(BIRTHDAY)
+            .build();
+
+    public static final User userNotIdNotName = User.builder()
+            .email("email@ya.ru")
+            .login("Login")
+            .birthday(BIRTHDAY)
+            .build();
+
+    public static final User userBadEmail = new User("email-ya.ru", "Login", BIRTHDAY);
+    public static final User userBadLogin = new User("email@ya.ru", "", BIRTHDAY);
+    public static final User userBadBirthday = new User("email@ya.ru", "Login", LocalDate.of(3000, 1, 1));
 
 }

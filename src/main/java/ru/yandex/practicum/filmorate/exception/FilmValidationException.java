@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.exception;
 
 public class FilmValidationException extends ValidationException {
-    public FilmValidationException() {
-        super("Ошибка в данных о фильме ");
+    public FilmValidationException(String message) {
+        super(message);
     }
 
 }
