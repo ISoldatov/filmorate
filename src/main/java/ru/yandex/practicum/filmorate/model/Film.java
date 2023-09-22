@@ -31,12 +31,19 @@ public class Film extends AbstractBaseEntity {
 
     private Set<Integer> likes = new HashSet<>();
 
-    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration) {
+    private Set<Genre> genre = new HashSet<>();
+
+    @NotBlank(message = "У фильма должен быть рейтинг")
+    private MPA mpa;
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, Set<Genre> genre, MPA mpa) {
         super(id);
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        this.genre = genre;
+        this.mpa = mpa;
     }
 
     public int getCountLikes() {
