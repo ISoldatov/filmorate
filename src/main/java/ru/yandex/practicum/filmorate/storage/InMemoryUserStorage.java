@@ -1,18 +1,17 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.model.Friend;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Integer, User> storage = new HashMap<>();
+    private final Map<Integer, Set<Friend>> friends = new HashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
     @Override
