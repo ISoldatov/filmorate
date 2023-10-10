@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationUtil;
 import ru.yandex.practicum.filmorate.model.User;
@@ -11,7 +12,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+
 public class UserService {
+
 
     private final UserStorage storage;
 
