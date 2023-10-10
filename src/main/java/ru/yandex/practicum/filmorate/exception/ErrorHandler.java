@@ -22,6 +22,14 @@ public class ErrorHandler {
         return Map.of("ERROR", e.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handIncorrectId(final UserValidationException e) {
+        return Map.of("ERROR", e.getMessage());
+    }
+
+
+
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handAllExceptions(final Throwable e) {

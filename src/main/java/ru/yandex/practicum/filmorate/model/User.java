@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class User extends AbstractBaseEntity {
-    @Email(message = "Email не верного формата.")
+//    @Email(message = "Email не верного формата.")
     private String email;
 
     @NotBlank(message = "Login не может быть пустым.")

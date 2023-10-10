@@ -7,21 +7,18 @@ import ru.yandex.practicum.filmorate.exception.ValidationUtil;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-
 public class UserService {
 
-
-    private final UserStorage storage;
-
     @Autowired
-    public UserService(UserStorage storage) {
-        this.storage = storage;
-    }
+    @Qualifier("userDbStorage")
+    private UserStorage storage;
 
     public User create(User user) {
         return storage.save(user);
