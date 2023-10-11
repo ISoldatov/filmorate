@@ -6,10 +6,7 @@ import java.util.List;
 
 public interface FilmStorage {
     Film save(Film film);
-
     boolean delete(int id);
-
     Film get(int id);
-
     List<Film> getAll();
 }

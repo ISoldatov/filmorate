@@ -26,6 +26,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
+    public User update(User user) {
+        return null;
+    }
+
+    @Override
     public boolean delete(int id) {
         return storage.remove(id) != null;
     }

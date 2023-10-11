@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public User update(User user) {
-        return ValidationUtil.checkNotFoundWithId(storage.save(user), user.getId());
+        return ValidationUtil.checkNotFoundWithId(storage.update(user), user.getId());
     }
 
     public void delete(int id) {

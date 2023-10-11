@@ -12,6 +12,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +21,6 @@ import java.util.Objects;
 @Component("userDbStorage")
 public class UserDbStorage implements UserStorage {
     private final Logger log = LoggerFactory.getLogger(UserDbStorage.class);
-
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -31,7 +32,6 @@ public class UserDbStorage implements UserStorage {
     public User save(User user) {
         String sqlQuery = "insert into users(email, login, name, birthday) " +
                 "values (?, ?, ?, ?)";
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"id"});
@@ -46,10 +46,24 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
+    public User update(User user) {
+        String sqlQuery = "update users set " +
+                "email = ?, login = ?, name = ?, birthday = ?" +
+                "where id = ?";
+        int numberRowAffect = jdbcTemplate.update(sqlQuery,
+                user.getEmail(),
+                user.getLogin(),
+                user.getName(),
+                user.getBirthday().toString(),
+                user.getId());
+
+        return numberRowAffect > 0 ? user : null;
+    }
+
+    @Override
     public boolean delete(int id) {
         String sqlQuery = "delete from users where id = ?";
         return jdbcTemplate.update(sqlQuery, id) > 0;
-
     }
 
     @Override
@@ -77,6 +91,21 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getAll() {
-        return null;
+        String sqlQuery = "SELECT * from users";
+        List<User> list = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs));
+        return list;
     }
+
+    private User makeUser(ResultSet rs) throws SQLException {
+//        LocalDate d = rs.getObject("birthdate", LocalDate.class);
+        User user = new User(
+                rs.getInt("id"),
+                rs.getString("email"),
+                rs.getString("login"),
+                rs.getString("name"),
+                rs.getObject("birthday", LocalDate.class)
+        );
+        return user;
+    }
+
 }

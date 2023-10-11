@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-public enum MPA {
+public enum MPAType {
     G,
     PG,
     PG13,
