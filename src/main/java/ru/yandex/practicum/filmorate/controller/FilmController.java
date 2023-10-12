@@ -25,7 +25,7 @@ public class FilmController {
     }
 
     @PostMapping("/films")
-    public Film create(@Valid @RequestBody Film film) {
+    public Film create(@RequestBody Film film) {
         log.debug("Добавление фильма \"{}\"", film.getName());
         checkNew(film);
         checkFilm(film);
