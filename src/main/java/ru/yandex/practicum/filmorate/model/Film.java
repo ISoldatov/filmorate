@@ -36,13 +36,14 @@ public class Film extends AbstractBaseEntity {
 
     private Set<Genre> genre;
 
-    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, MPA mpa) {
+    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, MPA mpa, Set<Genre> genre) {
         super(id);
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.mpa = mpa;
+        this.genre = genre;
     }
 
     public int getCountLikes() {
