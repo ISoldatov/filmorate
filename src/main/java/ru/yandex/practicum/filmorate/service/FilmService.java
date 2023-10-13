@@ -21,7 +21,7 @@ public class FilmService {
     }
 
     public Film update(Film film) {
-        return ValidationUtil.checkNotFoundWithId(storage.save(film), film.getId());
+        return ValidationUtil.checkNotFoundWithId(storage.update(film), film.getId());
     }
 
     public void delete(int id) {

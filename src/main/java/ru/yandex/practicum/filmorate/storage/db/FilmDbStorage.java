@@ -7,10 +7,14 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +30,7 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film save(Film film) {
         String sqlQuery = "INSERT INTO films (name, description, release_date, duration, mpa)" +
-                "values (?,?,?,?,?)";
+                "VALUES (?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"id"});
@@ -42,6 +46,21 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
+    public Film update(Film film) {
+        String sqlQuery = "UPDATE films SET " +
+                "name = ?, description = ?, release_date = ?, duration = ?, mpa= ?" +
+                "where id = ?";
+        int numberRowAffect = jdbcTemplate.update(sqlQuery,
+                film.getName(),
+                film.getDescription(),
+                Date.valueOf(film.getReleaseDate()),
+                film.getDuration(),
+                film.getMpa().getId(),
+                film.getId());
+        return numberRowAffect > 0 ? film : null;
+    }
+
+    @Override
     public boolean delete(int id) {
         return false;
     }
@@ -53,6 +72,23 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getAll() {
-        return null;
+
+        String sqlQuery = "SELECT * from films";
+        List<Film> list = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilm(rs));
+        return list;
+    }
+
+    private Film makeFilm(ResultSet rs) throws SQLException {
+//        LocalDate d = rs.getObject("birthdate", LocalDate.class);
+        Film film = new Film(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("description"),
+                rs.getObject("release_date", LocalDate.class),
+                rs.getInt("duration"),
+                new MPA(rs.getInt("MPA"),rs.getString("TITLE"))
+        );
+        return film;
     }
 }
+
