@@ -25,11 +25,11 @@ public class InDBMPAStorage implements MPAStorage {
                 "            FROM Mpa " +
                 "           WHERE id=?";
 
-        List<MPA> MPAs = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new MPA(rs.getInt("id"), rs.getString("name")), id);
-        if (MPAs.isEmpty()) {
+        List<MPA> mpas = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new MPA(rs.getInt("id"), rs.getString("name")), id);
+        if (mpas.isEmpty()) {
             return null;
         }
-        return MPAs.get(0);
+        return mpas.get(0);
     }
 
     @Override
