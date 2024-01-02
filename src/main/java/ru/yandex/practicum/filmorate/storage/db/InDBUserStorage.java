@@ -54,12 +54,12 @@ public class InDBUserStorage implements UserStorage {
                 "birthday = ? " +
                 "WHERE id = ?";
 
-        int numRow = jdbcTemplate.update(sqlQuery
-                , user.getEmail()
-                , user.getLogin()
-                , user.getName()
-                , Date.valueOf(user.getBirthday())
-                , user.getId());
+        int numRow = jdbcTemplate.update(sqlQuery,
+                user.getEmail(),
+                user.getLogin(),
+                user.getName(),
+                Date.valueOf(user.getBirthday()),
+                user.getId());
 
         return numRow == 0 ? null : user;
     }

@@ -65,6 +65,4 @@ public class InDBLikeStorage implements LikeStorage {
                 "           LIMIT ? ";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> rs.getInt("id"), count);
     }
-
-
 }

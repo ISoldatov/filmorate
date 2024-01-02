@@ -68,13 +68,13 @@ public class InDBFilmStorage implements FilmStorage {
                 "                 mpa = ? " +
                 "           WHERE id = ?";
 
-        int numRow = jdbcTemplate.update(sqlQuery
-                , film.getName()
-                , film.getDescription()
-                , Date.valueOf(film.getReleaseDate())
-                , film.getDuration()
-                , film.getMpa().getId()
-                , film.getId());
+        int numRow = jdbcTemplate.update(sqlQuery,
+                 film.getName(),
+                 film.getDescription(),
+                 Date.valueOf(film.getReleaseDate()),
+                 film.getDuration(),
+                 film.getMpa().getId(),
+                 film.getId());
 
         filmGenreStorage.updateGenre(film.getId(), film.getGenres());
         likeStorage.updateLikes(film.getId(), film.getLikes());
