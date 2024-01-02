@@ -61,7 +61,7 @@ public class InDBLikeStorage implements LikeStorage {
                 "            FROM films f " +
                 "       LEFT JOIN Likes l on f.id =l.id_film " +
                 "        GROUP BY f.id " +
-                "        ORDER BY count(f.id) DESC " +
+                "        ORDER BY count(f.id) DESC, f.id desc " +
                 "           LIMIT ? ";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> rs.getInt("id"), count);
     }
