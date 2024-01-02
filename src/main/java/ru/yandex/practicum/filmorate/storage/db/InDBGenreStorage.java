@@ -25,11 +25,11 @@ public class InDBGenreStorage implements GenreStorage {
                 "            FROM Genres " +
                 "           WHERE id=?";
 
-        List<Genre> Genres = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new Genre(rs.getInt("id"), rs.getString("name")), id);
-        if (Genres.isEmpty()) {
+        List<Genre> genres = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> new Genre(rs.getInt("id"), rs.getString("name")), id);
+        if (genres.isEmpty()) {
             return null;
         }
-        return Genres.get(0);
+        return genres.get(0);
     }
 
     @Override
@@ -41,7 +41,4 @@ public class InDBGenreStorage implements GenreStorage {
         return jdbcTemplate.query(sqlQuery,
                 (rs, rowNum) -> new Genre(rs.getInt("id"), rs.getString("name")));
     }
-
-
-
 }
