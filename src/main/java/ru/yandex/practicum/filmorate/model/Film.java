@@ -1,50 +1,45 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.util.annotation.MinimumDate;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
+@SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Film extends AbstractBaseEntity {
-    @NotBlank(message = "Название фильма не может быть пустым.")
+
+    @NotNull(message = "Название фильма обязательно.")
+    @NotBlank(message = "Название не может быть пустым.")
     private String name;
-    @Size(max = 200, message = "Максимальное описание составляет 200 символов.")
+
+    @Size(max = 200, message = "Максимальная длина описания - 200 символов.")
     private String description;
 
-    @Past(message = "Дата выхода должна быть в прошлом.")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @MinimumDate
+    @Past(message = "Дата релиза не может быть раньше 28 декабря 1895 года.")
     private LocalDate releaseDate;
 
-    @Min(value = 1, message = "Продолжительность фильма должна быть больше 0.")
+    @Positive(message = "Продолжительность фильма должна быть положительным числом.")
     private int duration;
 
-    private Set<Integer> likes = new HashSet<>();
-
-    @NotBlank(message = "У фильма должен быть рейтинг")
+    @NotNull(message = "Рейтинг фильма обязателен")
     private MPA mpa;
 
-    private Set<Genre> genre;
+    private List<Genre> genres = new ArrayList<>();
 
-    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, MPA mpa, Set<Genre> genre) {
-        super(id);
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.mpa = mpa;
-        this.genre = genre;
-    }
+    private Set<Integer> likes = new HashSet<>();
 
     public int getCountLikes() {
         return likes.size();

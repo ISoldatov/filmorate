@@ -1,19 +1,14 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.context.annotation.Bean;
+import lombok.NoArgsConstructor;
 
 @Data
-public class MPA{
-private final int id;
-private String title;
+@NoArgsConstructor
+@AllArgsConstructor
+public class MPA {
+    private int id;
+    private String name;
 
-    public MPA(int id, String title) {
-        this.id = id;
-        this.title = title;
-    }
-
-    public MPA(int id) {
-        this.id = id;
-    }
 }

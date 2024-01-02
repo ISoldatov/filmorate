@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.storage.inmemory;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,25 +11,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Repository
+@Component
 public class InMemoryFilmStorage implements FilmStorage {
-
     private final Map<Integer, Film> storage = new HashMap<>();
+
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    @Override
     public Film save(Film film) {
-        if (film.isNew()) {
-            film.setId(counter.incrementAndGet());
-            storage.put(film.getId(), film);
-            return film;
-        }
-        return storage.computeIfPresent(film.getId(), (id, oldFilm) -> film);
+        film.setId(counter.incrementAndGet());
+        storage.put(film.getId(), film);
+        return film;
     }
 
-    @Override
     public Film update(Film film) {
-        return null;
+        return storage.computeIfPresent(film.getId(), (i, oldFilm) -> film);
     }
 
     @Override
@@ -45,4 +41,9 @@ public class InMemoryFilmStorage implements FilmStorage {
     public List<Film> getAll() {
         return new ArrayList<>(storage.values());
     }
+
+    public List<Film> getPopFilms(int count) {
+        return null;
+    }
+
 }
