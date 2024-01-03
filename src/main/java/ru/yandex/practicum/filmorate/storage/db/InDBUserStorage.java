@@ -89,7 +89,7 @@ public class InDBUserStorage implements UserStorage {
         return jdbcTemplate.query(sqlQuery, this::mapRowToUser);
     }
 
-    User mapRowToUser(ResultSet rs, int rowNum) throws SQLException {
+    private User mapRowToUser(ResultSet rs, int rowNum) throws SQLException {
         return User.builder()
                 .id(rs.getInt("id"))
                 .email(rs.getString("email"))

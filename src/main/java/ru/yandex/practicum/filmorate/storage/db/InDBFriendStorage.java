@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendStorage;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Component
 public class InDBFriendStorage implements FriendStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    @Autowired
-    private InDBUserStorage userStorage;
 
     public InDBFriendStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -41,7 +41,7 @@ public class InDBFriendStorage implements FriendStorage {
                 "            FROM Friends f " +
                 "           INNER JOIN Users u ON u.ID =f.ID_FRIEND " +
                 "           WHERE f.ID_USER =?";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> userStorage.mapRowToUser(rs, rowNum), userId);
+        return jdbcTemplate.query(sqlQuery, this::mapRowToUser, userId);
     }
 
     @Override
@@ -54,7 +54,17 @@ public class InDBFriendStorage implements FriendStorage {
                 "                                                   FROM friends f " +
                 "                                                  WHERE f.ID_USER =?) " +
                 "                           AND f2.ID_USER =?)";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> userStorage.mapRowToUser(rs, rowNum), userId, friendId);
+        return jdbcTemplate.query(sqlQuery, this::mapRowToUser, userId, friendId);
+    }
+
+    private User mapRowToUser(ResultSet rs, int rowNum) throws SQLException {
+        return User.builder()
+                .id(rs.getInt("id"))
+                .email(rs.getString("email"))
+                .login(rs.getString("login"))
+                .name(rs.getString("name"))
+                .birthday(rs.getDate("birthday").toLocalDate())
+                .build();
     }
 }
 

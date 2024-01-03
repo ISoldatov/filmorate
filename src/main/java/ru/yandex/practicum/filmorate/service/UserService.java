@@ -39,33 +39,23 @@ public class UserService {
     }
 
     public void addFriend(int userId, int friendId) {
-        User user = ValidationUtil.checkNotFoundWithId(userStorage.get(userId), userId);
-        User friend = ValidationUtil.checkNotFoundWithId(userStorage.get(friendId), friendId);
+        ValidationUtil.checkNotFoundWithId(userStorage.get(userId), userId);
+        ValidationUtil.checkNotFoundWithId(userStorage.get(friendId), friendId);
         friendStorage.addFriend(userId, friendId);
     }
 
     public void removeFriend(int userId, int friendId) {
-        User user = ValidationUtil.checkNotFoundWithId(userStorage.get(userId), userId);
-        User friend = ValidationUtil.checkNotFoundWithId(userStorage.get(friendId), friendId);
+        ValidationUtil.checkNotFoundWithId(userStorage.get(userId), userId);
+        ValidationUtil.checkNotFoundWithId(userStorage.get(friendId), friendId);
         friendStorage.removeFriend(userId, friendId);
     }
 
     public List<User> getFriends(int userId) {
         return friendStorage.getFriends(userId);
-//        User user = ValidationUtil.checkNotFoundWithId(userStorage.get(userId), userId);
-//        return user.getFriends().stream().map(userStorage::get).collect(Collectors.toList());
     }
 
     public List<User> getCommFriends(int id, int otherId) {
         return friendStorage.getCommFriends(id, otherId);
-//        List<Integer> allFriendsBothUsers = Stream.of(userStorage.get(id).getFriends(), userStorage.get(otherId).getFriends())
-//                .flatMap(java.util.Collection::stream)
-//                .collect(Collectors.toList());
-//        return allFriendsBothUsers.stream()
-//                .filter((i -> Collections.frequency(allFriendsBothUsers, i) > 1))
-//                .map(userStorage::get)
-//                .distinct()
-//                .collect(Collectors.toList());
     }
 
     private void checkNameEmpty(User user) {
