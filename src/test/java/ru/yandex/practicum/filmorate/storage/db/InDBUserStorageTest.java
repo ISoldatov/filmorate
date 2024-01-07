@@ -23,7 +23,6 @@ class InDBUserStorageTest {
 
     private static User firstUser;
     private static User secondUser;
-    private static User updateUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -48,24 +47,16 @@ class InDBUserStorageTest {
                 .birthday(LocalDate.of(2002, 2, 2))
                 .friends(null)
                 .build();
-        updateUser = User.builder()
-                .id(1)
-                .email("updateUser@email.ru")
-                .login("updateUser")
-                .name("updUser")
-                .birthday(LocalDate.of(2005, 5, 5))
-                .friends(null)
-                .build();
     }
 
     @Test
     void saveAndGet() {
         UserStorage userStorage = new InDBUserStorage(jdbcTemplate);
-        userStorage.save(firstUser);
+        int idFirstUser = userStorage.save(firstUser).getId();
 
-        User savedUser = userStorage.get(1);
+        User getUser = userStorage.get(idFirstUser);
 
-        assertThat(savedUser)
+        assertThat(getUser)
                 .isNotNull() // проверяем, что объект не равен null
                 .usingRecursiveComparison() // проверяем, что значения полей нового
                 .isEqualTo(firstUser);        // и сохраненного пользователя - совпадают
@@ -74,10 +65,20 @@ class InDBUserStorageTest {
     @Test
     void update() {
         UserStorage userStorage = new InDBUserStorage(jdbcTemplate);
-        userStorage.save(firstUser);
+        int idFirstUser = userStorage.save(firstUser).getId();
+
+        User updateUser = User.builder()
+                .id(idFirstUser)
+                .email("updateUser@email.ru")
+                .login("updateUser")
+                .name("updUser")
+                .birthday(LocalDate.of(2005, 5, 5))
+                .friends(null)
+                .build();
+
         userStorage.update(updateUser);
 
-        User updUser = userStorage.get(1);
+        User updUser = userStorage.get(updateUser.getId());
 
         assertThat(updUser)
                 .isNotNull() // проверяем, что объект не равен null
@@ -89,15 +90,15 @@ class InDBUserStorageTest {
     void delete() {
         UserStorage userStorage = new InDBUserStorage(jdbcTemplate);
         User[] users = new User[]{secondUser};
-        userStorage.save(firstUser);
+        int idFirstUser = userStorage.save(firstUser).getId();
         userStorage.save(secondUser);
 
-        userStorage.delete(1);
-        User[] saveUsers = userStorage.getAll().toArray(new User[0]);
+        userStorage.delete(idFirstUser);
+        User[] savedUsers = userStorage.getAll().toArray(new User[0]);
 
 
-        assertEquals(1,saveUsers.length);
-        assertArrayEquals(users, saveUsers);
+        assertEquals(1, savedUsers.length);
+        assertArrayEquals(users, savedUsers);
 
     }
 
@@ -109,10 +110,10 @@ class InDBUserStorageTest {
         userStorage.save(firstUser);
         userStorage.save(secondUser);
 
-        User[] saveUsers = userStorage.getAll().toArray(new User[0]);
+        User[] savedUsers = userStorage.getAll().toArray(new User[0]);
 
-        assertEquals(2,saveUsers.length);
-        assertArrayEquals(users, saveUsers);
+        assertEquals(2, savedUsers.length);
+        assertArrayEquals(users, savedUsers);
 
     }
 }
