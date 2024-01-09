@@ -22,6 +22,12 @@ public class ErrorHandler {
         return new ErrorResponse("Ошибка валидации!", e.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handAllExceptions(final DBMSException e) {
+        return Map.of("Ошибка сервера!", "Ошибка работы с БД.");
+    }
+
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handAllExceptions(final Throwable e) {

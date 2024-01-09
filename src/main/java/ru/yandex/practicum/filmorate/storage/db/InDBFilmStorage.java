@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.FilmGenreStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.MPAStorage;
+import ru.yandex.practicum.filmorate.util.exception.DBMSException;
 
 import java.sql.*;
 import java.util.List;
@@ -19,9 +20,9 @@ import java.util.stream.Collectors;
 public class InDBFilmStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private MPAStorage mpaStorage;
-    private FilmGenreStorage filmGenreStorage;
-    private LikeStorage likeStorage;
+    private final MPAStorage  mpaStorage;
+    private final FilmGenreStorage filmGenreStorage;
+    private final LikeStorage likeStorage;
 
     public InDBFilmStorage(JdbcTemplate jdbcTemplate, MPAStorage mpaStorage, FilmGenreStorage filmGenreStorage, LikeStorage likeStorage) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,7 +37,7 @@ public class InDBFilmStorage implements FilmStorage {
                 "VALUES (?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
+        int numRow = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, film.getName());
             ps.setString(2, film.getDescription());
@@ -46,10 +47,14 @@ public class InDBFilmStorage implements FilmStorage {
             return ps;
         }, keyHolder);
 
-        if (keyHolder.getKeys().size() > 1) {
-            film.setId((int) keyHolder.getKeys().get("id"));
-        } else {
+        if (numRow == 0) {
+            throw new DBMSException("Ошибка БД: Запись не добавлена в таблицу.");
+        }
+
+        try {
             film.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        } catch (NullPointerException e) {
+            throw new DBMSException("Ошибка БД: ИД Фильма не получено.");
         }
 
         film.getGenres().forEach(genre -> filmGenreStorage.setGenre(film.getId(), genre.getId()));
@@ -69,12 +74,12 @@ public class InDBFilmStorage implements FilmStorage {
                 "           WHERE id = ?";
 
         int numRow = jdbcTemplate.update(sqlQuery,
-                 film.getName(),
-                 film.getDescription(),
-                 Date.valueOf(film.getReleaseDate()),
-                 film.getDuration(),
-                 film.getMpa().getId(),
-                 film.getId());
+                film.getName(),
+                film.getDescription(),
+                Date.valueOf(film.getReleaseDate()),
+                film.getDuration(),
+                film.getMpa().getId(),
+                film.getId());
 
         filmGenreStorage.updateGenre(film.getId(), film.getGenres());
         likeStorage.updateLikes(film.getId(), film.getLikes());
@@ -133,10 +138,9 @@ public class InDBFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopFilms(int count) {
-        List<Film> films = likeStorage.getPopFilms(count).stream()
+        return likeStorage.getPopFilms(count).stream()
                 .map(this::get)
                 .collect(Collectors.toList());
-        return films;
     }
 
     Film mapRowToFilm(ResultSet rs, int rowNum) throws SQLException {
@@ -154,6 +158,5 @@ public class InDBFilmStorage implements FilmStorage {
         System.out.println(film);
         return film;
     }
-
 
 }

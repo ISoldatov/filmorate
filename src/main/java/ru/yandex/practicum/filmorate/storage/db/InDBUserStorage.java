@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.util.exception.DBMSException;
 
 import java.sql.*;
 import java.util.List;
@@ -28,7 +29,7 @@ public class InDBUserStorage implements UserStorage {
                 "VALUES (?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
+        int numRow = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getLogin());
@@ -37,11 +38,16 @@ public class InDBUserStorage implements UserStorage {
             return ps;
         }, keyHolder);
 
-        if (keyHolder.getKeys().size() > 1) {
-            user.setId((int) keyHolder.getKeys().get("id"));
-        } else {
-            user.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        if (numRow == 0) {
+            throw new DBMSException("Ошибка БД: Запись не добавлена в таблицу.");
         }
+
+        try {
+            user.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        } catch (NullPointerException e) {
+            throw new DBMSException("Ошибка БД: ИД User не получено.");
+        }
+
         return user;
     }
 

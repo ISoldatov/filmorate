@@ -15,7 +15,6 @@ import java.util.List;
 import static ru.yandex.practicum.filmorate.util.ValidationUtil.*;
 
 @RestController
-//@RequestMapping("/films")
 public class FilmController {
     public static final Logger log = LoggerFactory.getLogger(FilmController.class);
 
@@ -63,7 +62,6 @@ public class FilmController {
     @DeleteMapping(value = "/films/{id}/like/{userId}")
     public void removeLike(@PathVariable("id") int filmId, @PathVariable int userId) {
         log.debug("Фильму id={} удаляет like User c id={}", filmId, userId);
-//        checkParams(filmId, userId); закомментировал для тестов, хотят код 404 а не 400. Я же ловлю уже здесь отрицательные параметры
         filmService.removeLike(filmId, userId);
     }
 
