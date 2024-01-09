@@ -1,74 +1,67 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.ValidationUtil;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.util.ValidationUtil;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
 @Service
 public class UserService {
 
-    private final UserStorage storage;
+    @Autowired
+    @Qualifier("inDBUserStorage")
+    private UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage storage) {
-        this.storage = storage;
-    }
+    private FriendStorage friendStorage;
 
     public User create(User user) {
-        return storage.save(user);
+        checkNameEmpty(user);
+        return userStorage.save(user);
     }
 
     public User update(User user) {
-        return ValidationUtil.checkNotFoundWithId(storage.save(user), user.getId());
-    }
-
-    public void delete(int id) {
-        ValidationUtil.checkNotFoundWithId(storage.delete(id), id);
+        checkNameEmpty(user);
+        return ValidationUtil.checkNotFoundWithId(userStorage.update(user), user.getId());
     }
 
     public User get(int id) {
-        return ValidationUtil.checkNotFoundWithId(storage.get(id), id);
+        return ValidationUtil.checkNotFoundWithId(userStorage.get(id), id);
     }
 
     public List<User> getAll() {
-        return storage.getAll();
+        return userStorage.getAll();
     }
 
-    public void addFriend(int id, int friendId) {
-        User user = ValidationUtil.checkNotFoundWithId(storage.get(id), id);
-        User friendUser = ValidationUtil.checkNotFoundWithId(storage.get(friendId), friendId);
-//        storage.get(id).getFriends().add(friendUser.getId());
-        user.getFriends().add(friendId);
-        friendUser.getFriends().add(id);
+    public void addFriend(int userId, int friendId) {
+        ValidationUtil.checkNotFoundWithId(userStorage.get(userId), userId);
+        ValidationUtil.checkNotFoundWithId(userStorage.get(friendId), friendId);
+        friendStorage.addFriend(userId, friendId);
     }
 
-    public void removeFriend(int id, int friendId) {
-        User user = ValidationUtil.checkNotFoundWithId(storage.get(id), id);
-        User friendUser = ValidationUtil.checkNotFoundWithId(storage.get(friendId), friendId);
-        user.getFriends().remove(friendId);
-        friendUser.getFriends().remove(id);
+    public void removeFriend(int userId, int friendId) {
+        ValidationUtil.checkNotFoundWithId(userStorage.get(userId), userId);
+        ValidationUtil.checkNotFoundWithId(userStorage.get(friendId), friendId);
+        friendStorage.removeFriend(userId, friendId);
     }
 
-    public List<User> getFriends(int id) {
-        return storage.get(id).getFriends().stream()
-                .map(storage::get)
-                .collect(Collectors.toList());
+    public List<User> getFriends(int userId) {
+        return friendStorage.getFriends(userId);
     }
 
     public List<User> getCommFriends(int id, int otherId) {
-        List<Integer> allFriendsBothUsers = Stream.of(storage.get(id).getFriends(), storage.get(otherId).getFriends())
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-        return allFriendsBothUsers.stream()
-                .filter((i -> Collections.frequency(allFriendsBothUsers, i) > 1))
-                .map(storage::get)
-                .distinct()
-                .collect(Collectors.toList());
+        return friendStorage.getCommFriends(id, otherId);
+    }
+
+    private void checkNameEmpty(User user) {
+        String name = user.getName();
+        if (name == null || name.isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 }

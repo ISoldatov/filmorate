@@ -1,9 +1,14 @@
 package ru.yandex.practicum.filmorate.model;
 
-public enum MPA {
-    G,
-    PG,
-    PG13,
-    R,
-    NC
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MPA {
+    private int id;
+    private String name;
+
 }
